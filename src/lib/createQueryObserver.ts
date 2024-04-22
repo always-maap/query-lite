@@ -1,12 +1,12 @@
-import { QueryObserver, QueryOptions } from "./types";
+import { Query, QueryObserver, QueryOptions } from "./types";
 import { QueryClient } from "./QueryClient";
 
-export function createQueryObserver(client: QueryClient, { queryKey, queryFn, staleTime = 0 }: QueryOptions) {
-  const query = client.getQuery({ queryKey, queryFn });
+export function createQueryObserver<TData>(client: QueryClient, { queryKey, queryFn, staleTime = 0 }: QueryOptions) {
+  const query = client.getQuery({ queryKey, queryFn }) as Query<TData>;
 
-  const observer: QueryObserver = {
+  const observer: QueryObserver<TData> = {
     notify: () => {},
-    getResult: () => query.state,
+    getResult: () => query.state!,
     subscribe: (cb) => {
       observer.notify = cb;
       const unsubscribe = query.subscribe(observer);

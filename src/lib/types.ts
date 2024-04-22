@@ -6,26 +6,41 @@ export type QueryOptions = {
 
 type Action = () => void;
 
-export type Query = {
+export type Query<TData = unknown> = {
   queryKey: string[];
   queryHash: string;
-  promise: Promise<unknown> | null;
-  subscribers: QueryObserver[];
-  state: {
-    status: "loading" | "success" | "error";
-    isFetching: boolean;
-    data: unknown;
-    error: unknown;
-    lastUpdated?: number;
-  };
-  subscribe: (subscriber: QueryObserver) => Action;
-  setState: (updater: (state: Query["state"]) => Query["state"]) => void;
-  fetch: () => Query["promise"];
+  promise: unknown | null;
+  subscribers: QueryObserver<TData>[];
+  state:
+    | {
+        status: "loading";
+        isFetching: boolean;
+        data: undefined;
+        error: unknown;
+        lastUpdated?: number;
+      }
+    | {
+        status: "success";
+        isFetching: boolean;
+        data: TData;
+        error: unknown;
+        lastUpdated?: number;
+      }
+    | {
+        status: "error";
+        isFetching: boolean;
+        data: undefined;
+        error: unknown;
+        lastUpdated?: number;
+      };
+  subscribe: (subscriber: QueryObserver<TData>) => Action;
+  setState: (updater: (state: Query<TData>["state"]) => Query<TData>["state"]) => void;
+  fetch: () => Query<TData>["promise"];
 };
 
-export type QueryObserver = {
+export type QueryObserver<TData> = {
   notify: Action;
-  getResult: () => Query["state"];
+  getResult: () => Query<TData>["state"];
   subscribe: (cb: Action) => Action;
   fetch: Action;
 };

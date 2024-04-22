@@ -1,8 +1,8 @@
 import { QueryClient } from "./QueryClient";
 import { Query, QueryOptions } from "./types";
 
-export function createQuery(client: QueryClient, { queryKey, queryFn }: QueryOptions) {
-  const query: Query = {
+export function createQuery<TData = unknown>(client: QueryClient, { queryKey, queryFn }: QueryOptions) {
+  const query: Query<TData> = {
     queryKey,
     queryHash: JSON.stringify(queryKey),
     promise: null,
@@ -34,7 +34,7 @@ export function createQuery(client: QueryClient, { queryKey, queryFn }: QueryOpt
           }));
 
           try {
-            const data = await queryFn();
+            const data = (await queryFn()) as TData;
 
             query.setState((state) => ({
               ...state,
@@ -46,6 +46,7 @@ export function createQuery(client: QueryClient, { queryKey, queryFn }: QueryOpt
             query.setState((state) => ({
               ...state,
               status: "error",
+              data: undefined,
               error,
             }));
           } finally {

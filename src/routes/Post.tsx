@@ -1,12 +1,13 @@
 import { Link, useParams } from "react-router-dom";
 import { useQuery } from "../lib";
 import { getPost } from "../apis/post";
+import { Post } from "../apis/types";
 
-export function Post() {
+export default function PostPage() {
   const { id } = useParams() as { id: string };
   console.log(id);
 
-  const { data, status } = useQuery({
+  const { data, status } = useQuery<Post>({
     queryKey: ["post", id],
     queryFn: () => getPost(id),
     staleTime: Infinity,

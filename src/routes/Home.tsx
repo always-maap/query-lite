@@ -1,9 +1,10 @@
 import { useQuery } from "../lib";
 import { getPosts } from "../apis/posts";
 import { Link } from "react-router-dom";
+import { Post } from "../apis/types";
 
-export function Home() {
-  const { data, status } = useQuery({
+export default function HomePage() {
+  const { data, status } = useQuery<Post[]>({
     queryKey: ["posts"],
     queryFn: getPosts,
     staleTime: Infinity,
