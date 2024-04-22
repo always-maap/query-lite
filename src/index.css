@@ -1,0 +1,12 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  background-image: url(https://www.shutterstock.com/image-vector/airplanes-doodle-set-600nw-642554170.jpg);
+  background-size: 300px;
+}
+
+#root {
+  padding: 25px;
+}
